@@ -1,0 +1,37 @@
+<!doctype html>
+<html ng-app="todoMVC">
+<head>
+  <link rel="stylesheet" href="app.css">
+  <script type="text/javascript" src="angular.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</head>
+<body>
+  <div ng-controller="TodoMVCController">
+    <ul>
+      <li>
+        <form ng-submit="todos.save()">
+          <input type="checkbox" autocomplete="off" ng-show="todos.list.length" ng-model="todos.checkAll" ng-change="todos.setListDone()">
+          <input type="text" placeholder="What needs to be done?" ng-model="todos.newText" ng-focus="todos.edited = null">
+        </form>
+      </li>
+      <li ng-repeat="todo in todos.list | filter:todos.filterList">
+        <form ng-submit="todos.edited = null">
+          <input type="checkbox" ng-model="todo.done" ng-change="todos.updateCheckStatus()">
+          <span ng-class="{strike:todo.done}" ng-hide="todos.edited == todo" ng-dblclick="todos.edited = todo">{{todo.text}}</span>
+          <input type="text" ng-model="todo.text" ng-show="todos.edited == todo" ng-blur="todos.edited = null">
+          <input type="button" class="remove-btn" value="X" ng-click="todos.remove(todo)">
+       </form>
+      </li>
+    </ul>
+    <div ng-show="todos.list.length">
+      <span>{{todos.left()}} items left</span>
+      <select ng-model="todos.listViewType">
+        <option value='all'>All</option>
+        <option value='active'>Active</option>
+        <option value='done'>Completed</option>
+      </select>
+      <input type="button" value="Clear completed" ng-show="todos.left() < todos.list.length" ng-click="todos.removeCompleted()">
+    </div>
+  </div>
+</body>
+</html>
